@@ -1,0 +1,21 @@
+
+<h2>Chat STLNBO</h2>
+<div id="chatBox" style="height:200px; overflow-y:auto; border:1px solid #ccc;"></div>
+<input id="msg" placeholder="Digite sua mensagem" />
+<button onclick="sendMessage()">Enviar</button>
+
+<script>
+  let chat = [];
+
+  function sendMessage() {
+    let user = sessionStorage.getItem("user") || "Anônimo";
+    let msg = document.getElementById("msg").value;
+    chat.push(`<b>${user}:</b> ${msg}`);
+    renderChat();
+    document.getElementById("msg").value = "";
+  }
+
+  function renderChat() {
+    document.getElementById("chatBox").innerHTML = chat.join("<br>");
+  }
+</script>

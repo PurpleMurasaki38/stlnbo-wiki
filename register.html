@@ -1,0 +1,14 @@
+
+<h2>Registrar</h2>
+<input type="text" id="newUser" placeholder="Usuário">
+<input type="password" id="newPass" placeholder="Senha">
+<button onclick="register()">Registrar</button>
+<script>
+  function register() {
+    let user = document.getElementById("newUser").value;
+    let pass = document.getElementById("newPass").value;
+    localStorage.setItem(user, pass);
+    alert("Registrado com sucesso!");
+    window.location.href = "login.html";
+  }
+</script>
