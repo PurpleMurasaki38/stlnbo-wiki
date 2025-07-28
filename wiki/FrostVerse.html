@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Wiki STLNBO — As 10 Faces de Frost</title>
 <style>
   body {
@@ -48,10 +48,25 @@
     transition: transform 0.3s, box-shadow 0.3s;
     position: relative;
     overflow: hidden;
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
   }
   .frost-card:hover {
     transform: scale(1.03);
     box-shadow: 0 0 20px rgba(255, 255, 255, 0.4);
+  }
+  .frost-image {
+    flex-shrink: 0;
+    width: 120px;
+    height: auto;
+    border-radius: 8px;
+    border: 1px solid #888;
+    background: #111;
+    box-shadow: 0 0 10px #50fa7b;
+  }
+  .frost-content {
+    flex: 1;
   }
   .frost-title {
     font-size: 1.4em;
@@ -100,7 +115,7 @@
     text-align: center;
     padding: 15px;
     font-size: 0.8em;
-    color: #666;
+    color: #665;
     border-top: 1px solid #444;
     margin-top: 20px;
     z-index: 2;
@@ -118,63 +133,93 @@
 <div class="frost-container">
 
   <div class="frost-card">
-    <div class="frost-title" onmouseover="playGlitch(this)">|1| Primeiro Frost — True!Frost</div>
-    <div class="frost-subtitle">Nível: 70 | Estado: Espírito Errante</div>
-    <div class="frost-text">Entrou para a Equipe Caótica e foi traído. Após a morte, retornou como um espírito de imenso poder, superando até Pokémon de nível 100/500.</div>
+    <img class="frost-image" src="true_frost.png" alt="True!Frost" />
+    <div class="frost-content">
+      <div class="frost-title" onmouseover="playGlitch(this)">|1| Primeiro Frost — True!Frost</div>
+      <div class="frost-subtitle">Nível: 70 | Estado: Espírito Errante</div>
+      <div class="frost-text">Entrou para a Equipe Caótica e foi traído. Após a morte, retornou como um espírito de imenso poder, superando até Pokémon de nível 100/500.</div>
+    </div>
   </div>
 
   <div class="frost-card">
-    <div class="frost-title" onmouseover="playGlitch(this)">|2| Segundo Frost — Kid!Frost</div>
-    <div class="frost-subtitle">Nível: 25 (Raditz+)</div>
-    <div class="frost-text">Uma versão jovem e inexperiente de Frost, ainda em busca de seu propósito. Em treinamento constante.</div>
+    <img class="frost-image" src="kid_frost.png" alt="Kid!Frost" />
+    <div class="frost-content">
+      <div class="frost-title" onmouseover="playGlitch(this)">|2| Segundo Frost — Kid!Frost</div>
+      <div class="frost-subtitle">Nível: 25 (Raditz+)</div>
+      <div class="frost-text">Uma versão jovem e inexperiente de Frost, ainda em busca de seu propósito. Em treinamento constante.</div>
+    </div>
   </div>
 
   <div class="frost-card">
-    <div class="frost-title" onmouseover="playGlitch(this)">|3| Terceiro Frost — Hydra!Frost</div>
-    <div class="frost-subtitle">Nível: 60 | Rivalidade ativa</div>
-    <div class="frost-text">Um Mew semi-divino que assumiu a identidade de Frost para tentar superá-lo. Rivalidade não resolvida com True!Frost.</div>
+    <img class="frost-image" src="hydra_frost.png" alt="Hydra!Frost" />
+    <div class="frost-content">
+      <div class="frost-title" onmouseover="playGlitch(this)">|3| Terceiro Frost — Hydra!Frost</div>
+      <div class="frost-subtitle">Nível: 60 | Rivalidade ativa</div>
+      <div class="frost-text">Um Mew semi-divino que assumiu a identidade de Frost para tentar superá-lo. Rivalidade não resolvida com True!Frost.</div>
+    </div>
   </div>
 
   <div class="frost-card">
-    <div class="frost-title" onmouseover="playGlitch(this)">|4| Quarto Frost — Steel!Frost</div>
-    <div class="frost-subtitle">Nível: 70 | Estado: Manipulador do Metaverso</div>
-    <div class="frost-text">Infectado pelo Metal Virus, manipulou o Metaverso por mais de 3 linhas do tempo, escolhendo receptáculos para o Botão RESET em rotas genocidas.</div>
+    <img class="frost-image" src="steel_frost.png" alt="Steel!Frost" />
+    <div class="frost-content">
+      <div class="frost-title" onmouseover="playGlitch(this)">|4| Quarto Frost — Steel!Frost</div>
+      <div class="frost-subtitle">Nível: 70 | Estado: Manipulador do Metaverso</div>
+      <div class="frost-text">Infectado pelo Metal Virus, manipulou o Metaverso por mais de 3 linhas do tempo, escolhendo receptáculos para o Botão RESET em rotas genocidas.</div>
+    </div>
   </div>
 
   <div class="frost-card">
-    <div class="frost-title" onmouseover="playGlitch(this)">|5| Quinto Frost — Dark!Frost (One!True!)</div>
-    <div class="frost-subtitle">Nível: 65 | Estado: Entidade Amaldiçoada</div>
-    <div class="frost-text">Serviu como espelho para o GRUDGE Virus, reencarnando como encarnação viva da corrupção viral.</div>
+    <img class="frost-image" src="dark_frost.png" alt="Dark!Frost (One!True!)" />
+    <div class="frost-content">
+      <div class="frost-title" onmouseover="playGlitch(this)">|5| Quinto Frost — Dark!Frost (One!True!)</div>
+      <div class="frost-subtitle">Nível: 65 | Estado: Entidade Amaldiçoada</div>
+      <div class="frost-text">Serviu como espelho para o GRUDGE Virus, reencarnando como encarnação viva da corrupção viral.</div>
+    </div>
   </div>
 
   <div class="frost-card">
-    <div class="frost-title" onmouseover="playGlitch(this)">|6| Sexto Frost — Menos!Frost</div>
-    <div class="frost-subtitle">Nível: ??? | Estado: Existência mínima</div>
-    <div class="frost-text">Metade espada, metade Quincy. Presença rara e quase esquecida, existente apenas em ecos espirituais.</div>
+    <img class="frost-image" src="menos_frost.png" alt="Menos!Frost" />
+    <div class="frost-content">
+      <div class="frost-title" onmouseover="playGlitch(this)">|6| Sexto Frost — Menos!Frost</div>
+      <div class="frost-subtitle">Nível: ??? | Estado: Existência mínima</div>
+      <div class="frost-text">Metade espada, metade Quincy. Presença rara e quase esquecida, existente apenas em ecos espirituais.</div>
+    </div>
   </div>
 
   <div class="frost-card">
-    <div class="frost-title" onmouseover="playGlitch(this)">|7| Sétimo Frost — True!Frost (Reencarnação)</div>
-    <div class="frost-subtitle">Nível: Elevado | Estado: Sob vigilância</div>
-    <div class="frost-text">Nova manifestação do True!Frost na Linha do Tempo nº 4, mantendo memórias parciais das encarnações passadas.</div>
+    <img class="frost-image" src="true_frost.png" alt="True!Frost (Reencarnação)" />
+    <div class="frost-content">
+      <div class="frost-title" onmouseover="playGlitch(this)">|7| Sétimo Frost — True!Frost (Reencarnação)</div>
+      <div class="frost-subtitle">Nível: Elevado | Estado: Sob vigilância</div>
+      <div class="frost-text">Nova manifestação do True!Frost na Linha do Tempo nº 4, mantendo memórias parciais das encarnações passadas.</div>
+    </div>
   </div>
 
   <div class="frost-card">
-    <div class="frost-title" onmouseover="playGlitch(this)">|8| Oitavo Frost</div>
-    <div class="frost-subtitle">CLASSIFICADO</div>
-    <div class="frost-text">Informações seladas. Apenas entidades autorizadas têm acesso a esta entrada.</div>
+    <img class="frost-image" src="for_us.png" alt="Frost For Us! (Oitavo Frost)" />
+    <div class="frost-content">
+      <div class="frost-title" onmouseover="playGlitch(this)">|8| Oitavo Frost — CLASSIFICADO</div>
+      <div class="frost-subtitle">CLASSIFICADO</div>
+      <div class="frost-text">Informações seladas. Apenas entidades autorizadas têm acesso a esta entrada.</div>
+    </div>
   </div>
 
   <div class="frost-card">
-    <div class="frost-title" onmouseover="playGlitch(this)">|9| Nono Frost</div>
-    <div class="frost-subtitle">ARQUIVO AUSENTE</div>
-    <div class="frost-text">Possível existência removida pela própria linha do tempo.</div>
+    <img class="frost-image" src="for_us.png" alt="Frost For Us! (Nono Frost)" />
+    <div class="frost-content">
+      <div class="frost-title" onmouseover="playGlitch(this)">|9| Nono Frost</div>
+      <div class="frost-subtitle">ARQUIVO AUSENTE</div>
+      <div class="frost-text">Possível existência removida pela própria linha do tempo.</div>
+    </div>
   </div>
 
   <div class="frost-card">
-    <div class="frost-title" onmouseover="playGlitch(this)">|10| Décimo Frost</div>
-    <div class="frost-subtitle">???</div>
-    <div class="frost-text">“Vai ter que estudar para entender…”</div>
+    <img class="frost-image" src="for_us.png" alt="Frost For Us! (Décimo Frost)" />
+    <div class="frost-content">
+      <div class="frost-title" onmouseover="playGlitch(this)">|10| Décimo Frost</div>
+      <div class="frost-subtitle">???</div>
+      <div class="frost-text">“Vai ter que estudar para entender…”</div>
+    </div>
   </div>
 
 </div>
