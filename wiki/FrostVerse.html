@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wiki STLNBO — As 10 Faces de Frost</title>
+<style>
+  body {
+    background: linear-gradient(180deg, #0a0a0f, #1b1b25);
+    color: #e8e8f0;
+    font-family: 'Trebuchet MS', sans-serif;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+  }
+  header {
+    text-align: center;
+    padding: 20px;
+    background: rgba(20, 20, 40, 0.9);
+    border-bottom: 2px solid #444;
+    position: relative;
+    z-index: 10;
+  }
+  header h1 {
+    font-size: 2.5em;
+    color: #8be9fd;
+    text-shadow: 0 0 5px #50fa7b, 0 0 10px #8be9fd;
+    animation: glowText 3s infinite alternate;
+  }
+  @keyframes glowText {
+    0% { text-shadow: 0 0 5px #50fa7b, 0 0 10px #8be9fd; }
+    100% { text-shadow: 0 0 15px #ff79c6, 0 0 30px #50fa7b; }
+  }
+  .frost-container {
+    max-width: 900px;
+    margin: 30px auto;
+    padding: 10px;
+    position: relative;
+    z-index: 2;
+  }
+  .frost-card {
+    background: rgba(30, 30, 50, 0.9);
+    border: 1px solid #555;
+    border-radius: 12px;
+    padding: 15px 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 0 8px rgba(0,0,0,0.6);
+    transition: transform 0.3s, box-shadow 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+  .frost-card:hover {
+    transform: scale(1.03);
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.4);
+  }
+  .frost-title {
+    font-size: 1.4em;
+    color: #ff79c6;
+    margin-bottom: 5px;
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+    transition: color 0.1s;
+  }
+  .glitch-active {
+    animation: glitchColors 0.2s infinite;
+  }
+  @keyframes glitchColors {
+    0% { color: #ff79c6; text-shadow: 2px 0 red, -2px 0 blue; }
+    50% { color: #50fa7b; text-shadow: -2px 0 blue, 2px 0 red; }
+    100% { color: #f1fa8c; text-shadow: 2px 0 red, -2px 0 blue; }
+  }
+  .frost-subtitle {
+    color: #50fa7b;
+    font-weight: bold;
+    margin-bottom: 8px;
+  }
+  .frost-text {
+    font-size: 0.95em;
+    line-height: 1.5;
+    color: #f8f8f2;
+  }
+  .particles {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+    background: url('https://www.transparenttextures.com/patterns/asfalt-light.png');
+    animation: flicker 4s infinite alternate;
+    opacity: 0.3;
+  }
+  @keyframes flicker {
+    0% { opacity: 0.3; }
+    100% { opacity: 0.5; }
+  }
+  footer {
+    text-align: center;
+    padding: 15px;
+    font-size: 0.8em;
+    color: #666;
+    border-top: 1px solid #444;
+    margin-top: 20px;
+    z-index: 2;
+    position: relative;
+  }
+</style>
+</head>
+<body>
+<div class="particles"></div>
+<audio id="hoverSound" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_9f0a03b39b.mp3?filename=glitch-124111.mp3" preload="auto"></audio>
+<header>
+  <h1>📜 Arquivo Oficial — As 10 Faces de Frost</h1>
+  <p><i>Registro secreto das variantes Frost existentes no Metaverso Pokémon</i></p>
+</header>
+<div class="frost-container">
+
+  <div class="frost-card">
+    <div class="frost-title" onmouseover="playGlitch(this)">|1| Primeiro Frost — True!Frost</div>
+    <div class="frost-subtitle">Nível: 70 | Estado: Espírito Errante</div>
+    <div class="frost-text">Entrou para a Equipe Caótica e foi traído. Após a morte, retornou como um espírito de imenso poder, superando até Pokémon de nível 100/500.</div>
+  </div>
+
+  <div class="frost-card">
+    <div class="frost-title" onmouseover="playGlitch(this)">|2| Segundo Frost — Kid!Frost</div>
+    <div class="frost-subtitle">Nível: 25 (Raditz+)</div>
+    <div class="frost-text">Uma versão jovem e inexperiente de Frost, ainda em busca de seu propósito. Em treinamento constante.</div>
+  </div>
+
+  <div class="frost-card">
+    <div class="frost-title" onmouseover="playGlitch(this)">|3| Terceiro Frost — Hydra!Frost</div>
+    <div class="frost-subtitle">Nível: 60 | Rivalidade ativa</div>
+    <div class="frost-text">Um Mew semi-divino que assumiu a identidade de Frost para tentar superá-lo. Rivalidade não resolvida com True!Frost.</div>
+  </div>
+
+  <div class="frost-card">
+    <div class="frost-title" onmouseover="playGlitch(this)">|4| Quarto Frost — Steel!Frost</div>
+    <div class="frost-subtitle">Nível: 70 | Estado: Manipulador do Metaverso</div>
+    <div class="frost-text">Infectado pelo Metal Virus, manipulou o Metaverso por mais de 3 linhas do tempo, escolhendo receptáculos para o Botão RESET em rotas genocidas.</div>
+  </div>
+
+  <div class="frost-card">
+    <div class="frost-title" onmouseover="playGlitch(this)">|5| Quinto Frost — Dark!Frost (One!True!)</div>
+    <div class="frost-subtitle">Nível: 65 | Estado: Entidade Amaldiçoada</div>
+    <div class="frost-text">Serviu como espelho para o GRUDGE Virus, reencarnando como encarnação viva da corrupção viral.</div>
+  </div>
+
+  <div class="frost-card">
+    <div class="frost-title" onmouseover="playGlitch(this)">|6| Sexto Frost — Menos!Frost</div>
+    <div class="frost-subtitle">Nível: ??? | Estado: Existência mínima</div>
+    <div class="frost-text">Metade espada, metade Quincy. Presença rara e quase esquecida, existente apenas em ecos espirituais.</div>
+  </div>
+
+  <div class="frost-card">
+    <div class="frost-title" onmouseover="playGlitch(this)">|7| Sétimo Frost — True!Frost (Reencarnação)</div>
+    <div class="frost-subtitle">Nível: Elevado | Estado: Sob vigilância</div>
+    <div class="frost-text">Nova manifestação do True!Frost na Linha do Tempo nº 4, mantendo memórias parciais das encarnações passadas.</div>
+  </div>
+
+  <div class="frost-card">
+    <div class="frost-title" onmouseover="playGlitch(this)">|8| Oitavo Frost</div>
+    <div class="frost-subtitle">CLASSIFICADO</div>
+    <div class="frost-text">Informações seladas. Apenas entidades autorizadas têm acesso a esta entrada.</div>
+  </div>
+
+  <div class="frost-card">
+    <div class="frost-title" onmouseover="playGlitch(this)">|9| Nono Frost</div>
+    <div class="frost-subtitle">ARQUIVO AUSENTE</div>
+    <div class="frost-text">Possível existência removida pela própria linha do tempo.</div>
+  </div>
+
+  <div class="frost-card">
+    <div class="frost-title" onmouseover="playGlitch(this)">|10| Décimo Frost</div>
+    <div class="frost-subtitle">???</div>
+    <div class="frost-text">“Vai ter que estudar para entender…”</div>
+  </div>
+
+</div>
+<footer>
+  <p>Wiki STLNBO — Arquivo das Linhas do Tempo de Frost</p>
+</footer>
+<script>
+  function playGlitch(element){
+    const sound = document.getElementById('hoverSound');
+    sound.currentTime = 0;
+    sound.play();
+    element.classList.add('glitch-active');
+    setTimeout(()=>{
+      element.classList.remove('glitch-active');
+    },500);
+  }
+</script>
+</body>
+</html>
