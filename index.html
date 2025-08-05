@@ -1,6 +1,350 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Galeria STLNBO - Fanarts & Personagens</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #111;
+            color: white;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background: black;
+            padding: 15px;
+            text-align: center;
+            border-bottom: 2px solid #444;
+        }
+
+        main {
+            max-width: 900px;
+            margin: auto;
+            padding: 20px;
+        }
+
+        #nova-foto, #galeria {
+            background: #1c1c1c;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        input, select, button {
+            width: 100%;
+            margin: 5px 0;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+        }
+
+        button {
+            background: #0f0;
+            color: black;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .categorias {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .categorias button {
+            background: #333;
+            color: white;
+            margin: 3px;
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            border: 1px solid #555;
+            width: auto;
+        }
+
+        .categorias button:hover {
+            background: #0f0;
+            color: black;
+        }
+
+        /* Barra de busca */
+        #busca {
+            margin-bottom: 15px;
+            padding: 10px;
+            width: 100%;
+            border-radius: 5px;
+            border: none;
+        }
+
+        /* Miniaturas */
+        .thumb {
+            display: inline-block;
+            width: 150px;
+            height: 150px;
+            overflow: hidden;
+            border-radius: 8px;
+            margin: 5px;
+            cursor: pointer;
+            background: #222;
+            vertical-align: top;
+            text-align: center;
+        }
+
+        .thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Cores categorias */
+        .cat-fanart { color: #0f0; }
+        .cat-personagem { color: #4db8ff; }
+        .cat-screenshot { color: #b84dff; }
+        .cat-outros { color: #bbb; }
+
+        /* Modal */
+        #modal {
+            display: none;
+            position: fixed;
+            z-index: 100;
+            left: 0; top: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.9);
+            justify-content: center;
+            align-items: center;
+        }
+
+        #modal-content {
+            background: #222;
+            padding: 15px;
+            border-radius: 10px;
+            max-width: 700px;
+            width: 90%;
+            text-align: center;
+        }
+
+        #modal img {
+            max-width: 100%;
+            border-radius: 5px;
+        }
+
+        .close-btn {
+            background: red;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 3px;
+            margin-top: 10px;
+            cursor: pointer;
+        }
+
+        .delete-comment-btn {
+            background: #ff4444;
+            color: white;
+            margin-left: 5px;
+            padding: 2px 5px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .comentarios {
+            background: #1a1a1a;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <h1>Galeria STLNBO - Fanarts & Personagens</h1>
+</header>
+
+<main>
+    <!-- Formulário -->
+    <section id="nova-foto">
+        <h2>Adicionar Foto</h2>
+        <input type="text" id="titulo" placeholder="Título da foto">
+        <input type="text" id="descricao" placeholder="Descrição">
+        <select id="categoria">
+            <option value="Fanart">Fanart</option>
+            <option value="Personagens STLNBO">Personagens STLNBO</option>
+            <option value="Screenshots">Screenshots</option>
+            <option value="Outros">Outros</option>
+        </select>
+        <input type="file" id="arquivo" accept="image/*">
+        <button onclick="adicionarFoto()">Postar</button>
+    </section>
+
+    <!-- Busca -->
+    <input type="text" id="busca" placeholder="Buscar por título..." oninput="buscar()">
+
+    <!-- Categorias -->
+    <section class="categorias">
+        <button onclick="filtrar('Todos')">Todos</button>
+        <button onclick="filtrar('Fanart')">Fanarts</button>
+        <button onclick="filtrar('Personagens STLNBO')">Personagens</button>
+        <button onclick="filtrar('Screenshots')">Screenshots</button>
+        <button onclick="filtrar('Outros')">Outros</button>
+    </section>
+
+    <!-- Galeria -->
+    <section id="galeria">
+        <h2>Galeria</h2>
+        <div id="posts"></div>
+    </section>
+</main>
+
+<!-- Modal -->
+<div id="modal">
+    <div id="modal-content">
+        <h3 id="modal-titulo"></h3>
+        <p id="modal-descricao"></p>
+        <img id="modal-imagem" src="">
+        <div class="comentarios">
+            <h4>Comentários:</h4>
+            <div id="modal-comentarios"></div>
+            <input type="text" id="novo-comentario" placeholder="Escreva um comentário">
+            <button onclick="adicionarComentarioModal()">Comentar</button>
+        </div>
+        <button class="close-btn" onclick="fecharModal()">Fechar</button>
+        <button class="close-btn" style="background:#ff0000" onclick="excluirPostModal()">Excluir Post</button>
+    </div>
+</div>
+
+<script>
+    let posts = JSON.parse(localStorage.getItem("galeriaPosts")) || [];
+    let categoriaFiltro = "Todos";
+    let postSelecionado = null;
+    let termoBusca = "";
+
+    function salvarPosts() {
+        localStorage.setItem("galeriaPosts", JSON.stringify(posts));
+    }
+
+    function corCategoria(categoria) {
+        if (categoria === "Fanart") return "cat-fanart";
+        if (categoria === "Personagens STLNBO") return "cat-personagem";
+        if (categoria === "Screenshots") return "cat-screenshot";
+        return "cat-outros";
+    }
+
+    function renderizarPosts() {
+        const postContainer = document.getElementById("posts");
+        postContainer.innerHTML = "";
+
+        posts
+            .filter(post => (categoriaFiltro === "Todos" || post.categoria === categoriaFiltro))
+            .filter(post => post.titulo.toLowerCase().includes(termoBusca.toLowerCase()))
+            .forEach((post, index) => {
+                const thumb = document.createElement("div");
+                thumb.classList.add("thumb");
+                thumb.innerHTML = `<img src="${post.imagem}" alt="${post.titulo}">`;
+                thumb.onclick = () => abrirModal(index);
+                postContainer.prepend(thumb);
+            });
+    }
+
+    function adicionarFoto() {
+        const titulo = document.getElementById("titulo").value;
+        const descricao = document.getElementById("descricao").value;
+        const categoria = document.getElementById("categoria").value;
+        const arquivo = document.getElementById("arquivo").files[0];
+
+        if (!titulo || !descricao || !arquivo) {
+            alert("Preencha todos os campos!");
+            return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const novaFoto = {
+                titulo: titulo,
+                descricao: descricao,
+                categoria: categoria,
+                imagem: e.target.result,
+                comentarios: []
+            };
+            posts.push(novaFoto);
+            salvarPosts();
+            renderizarPosts();
+        };
+        reader.readAsDataURL(arquivo);
+
+        document.getElementById("titulo").value = "";
+        document.getElementById("descricao").value = "";
+        document.getElementById("arquivo").value = "";
+    }
+
+    function abrirModal(index) {
+        postSelecionado = index;
+        const post = posts[index];
+        document.getElementById("modal-titulo").innerHTML = `${post.titulo} <small class="${corCategoria(post.categoria)}">(${post.categoria})</small>`;
+        document.getElementById("modal-descricao").innerText = post.descricao;
+        document.getElementById("modal-imagem").src = post.imagem;
+        renderizarComentariosModal();
+        document.getElementById("modal").style.display = "flex";
+    }
+
+    function fecharModal() {
+        document.getElementById("modal").style.display = "none";
+    }
+
+    function renderizarComentariosModal() {
+        const comentariosDiv = document.getElementById("modal-comentarios");
+        comentariosDiv.innerHTML = "";
+        posts[postSelecionado].comentarios.forEach((c, i) => {
+            const p = document.createElement("p");
+            p.innerHTML = `${c} <span class="delete-comment-btn" onclick="excluirComentarioModal(${i})">X</span>`;
+            comentariosDiv.appendChild(p);
+        });
+    }
+
+    function adicionarComentarioModal() {
+        const texto = document.getElementById("novo-comentario").value;
+        if (!texto) return;
+        posts[postSelecionado].comentarios.push(texto);
+        salvarPosts();
+        renderizarComentariosModal();
+        document.getElementById("novo-comentario").value = "";
+    }
+
+    function excluirComentarioModal(i) {
+        posts[postSelecionado].comentarios.splice(i, 1);
+        salvarPosts();
+        renderizarComentariosModal();
+    }
+
+    function excluirPostModal() {
+        if (confirm("Tem certeza que deseja excluir este post?")) {
+            posts.splice(postSelecionado, 1);
+            salvarPosts();
+            fecharModal();
+            renderizarPosts();
+        }
+    }
+
+    function filtrar(cat) {
+        categoriaFiltro = cat;
+        renderizarPosts();
+    }
+
+    function buscar() {
+        termoBusca = document.getElementById("busca").value;
+        renderizarPosts();
+    }
+
+    renderizarPosts();
+</script>
+</body>
+</html>
+
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>STLNBO - Músicas</title>
