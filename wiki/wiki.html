@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>STLNBO Wiki — LocalStorage</title>
+  <style>
+    :root{
+      --bg:#0f1115;--panel:#151923;--muted:#8b93a7;--text:#e6e9f2;--brand:#c01b2e;--ok:#2ecc71;--warn:#f1c40f;
+      --card:#121621;--border:#232a3a;--shadow:0 10px 24px rgba(0,0,0,.35);
+    }
+    *{box-sizing:border-box}
+    body{margin:0;font:16px/1.5 system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, sans-serif;background:var(--bg);color:var(--text);} 
+    header{position:sticky;top:0;z-index:5;background:linear-gradient(180deg,rgba(21,25,35,.95),rgba(21,25,35,.85));backdrop-filter:saturate(1.2) blur(6px);border-bottom:1px solid var(--border)}
+    .wrap{max-width:1100px;margin:0 auto;padding:20px}
+    h1{margin:0;font-size:1.4rem;letter-spacing:.3px}
+    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px}
+    .card{background:var(--card);border:1px solid var(--border);border-radius:16px;box-shadow:var(--shadow);overflow:hidden;display:flex;flex-direction:column}
+    .card img{width:100%;height:180px;object-fit:cover;background:#0b0e14}
+    .card .body{padding:12px 14px 14px}
+    .row{display:flex;gap:10px;flex-wrap:wrap}
+    .controls{display:flex;flex-wrap:wrap;gap:10px;margin-top:10px}
+    input[type="text"], textarea{width:100%;background:#0d111a;border:1px solid var(--border);border-radius:12px;color:var(--text);padding:10px 12px;outline:none}
+    textarea{min-height:90px;resize:vertical}
+    .btn{appearance:none;border:1px solid var(--border);background:#0d111a;color:var(--text);padding:10px 14px;border-radius:12px;cursor:pointer;transition:.2s}
+    .btn:hover{transform:translateY(-1px);border-color:#3a4258}
+    .btn.brand{background:var(--brand);border-color:transparent}
+    .btn.ghost{background:transparent}
+    .btn.small{padding:8px 10px;font-size:.9rem}
+    .pill{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--border);border-radius:999px;padding:6px 10px;color:var(--muted);font-size:.85rem}
+    .bar{display:flex;gap:10px;align-items:center;margin-top:12px;flex-wrap:wrap}
+    .filebox{display:flex;gap:8px;align-items:center}
+    .filebox input{display:none}
+    .filebox label{cursor:pointer}    
+    .muted{color:var(--muted)}
+    .danger{color:#ff6b6b}
+    .footer{margin-top:20px;color:var(--muted);font-size:.9rem}
+    .kbd{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;background:#0b0f16;border:1px solid var(--border);border-radius:6px;padding:2px 6px}
+    .badge{background:#182033;border:1px solid var(--border);padding:2px 8px;border-radius:999px;font-size:.8rem;color:var(--muted)}
+    .center{display:flex;align-items:center;justify-content:center}
+    .hidden{display:none}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <div class="row" style="justify-content:space-between;align-items:center">
+        <h1>STLNBO Wiki — <span class="muted">LocalStorage</span></h1>
+        <div class="row">
+          <button class="btn small" id="exportBtn" title="Baixar backup JSON">Exportar</button>
+          <label class="btn small ghost" for="importFile" title="Importar backup JSON">Importar</label>
+          <input id="importFile" type="file" accept="application/json" />
+          <button class="btn small danger" id="wipeBtn" title="APAGAR TUDO">Limpar Tudo</button>
+        </div>
+      </div>
+      <div class="bar">
+        <input id="search" type="text" placeholder="Buscar por nome ou descrição… (Ctrl+K)" />
+        <span class="pill" id="counter">0 itens</span>
+        <span class="pill" id="usage">0 KB</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section id="formCard" class="card" style="margin-bottom:18px">
+      <div class="body">
+        <h2 style="margin:0 0 6px 0">Adicionar / Editar Entrada</h2>
+        <p class="muted" style="margin:0 0 12px">Imagem + Nome + Descrição. Tudo fica salvo no seu navegador via <b>localStorage</b>.</p>
+        <div class="row">
+          <div class="filebox">
+            <input type="file" id="imageFile" accept="image/*" />
+            <label class="btn" for="imageFile">Escolher Imagem</label>
+            <span id="fileName" class="muted">.jpg .png .webp</span>
+          </div>
+          <input id="imageURL" type="text" placeholder="…ou cole URL da imagem (opcional)" />
+        </div>
+        <div class="row">
+          <input id="name" type="text" placeholder="Nome do personagem/entrada" />
+        </div>
+        <div class="row">
+          <textarea id="desc" placeholder="Descrição / poderes / notas…"></textarea>
+        </div>
+        <div class="controls">
+          <button id="saveBtn" class="btn brand">Salvar</button>
+          <button id="resetBtn" class="btn ghost">Limpar Formulário</button>
+          <span id="editHint" class="badge hidden">Editando…</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="grid" id="cards"></section>
+
+    <p class="footer">Dica: use <span class="kbd">Ctrl</span> + <span class="kbd">K</span> para focar a busca. As imagens de arquivo são comprimidas para economizar espaço. Este projeto salva apenas no seu dispositivo.
+    </p>
+  </main>
+
+  <template id="cardTpl">
+    <article class="card">
+      <img alt="imagem" />
+      <div class="body">
+        <h3 style="margin:0 0 6px"></h3>
+        <p class="muted" style="white-space:pre-wrap"></p>
+        <div class="controls" style="margin-top:10px">
+          <button class="btn small" data-act="edit">Editar</button>
+          <button class="btn small" data-act="dup">Duplicar</button>
+          <button class="btn small danger" data-act="del">Excluir</button>
+        </div>
+      </div>
+    </article>
+  </template>
+
+  <script>
+    const STORAGE_KEY = 'stlnbo_wiki_entries_v1';
+    const $ = s=>document.querySelector(s);
+    const $$ = s=>document.querySelectorAll(s);
+
+    const state = {
+      items: [],
+      editingId: null
+    };
+
+    const els = {
+      cards: $('#cards'),
+      search: $('#search'),
+      name: $('#name'),
+      desc: $('#desc'),
+      imageFile: $('#imageFile'),
+      imageURL: $('#imageURL'),
+      fileName: $('#fileName'),
+      saveBtn: $('#saveBtn'),
+      resetBtn: $('#resetBtn'),
+      counter: $('#counter'),
+      usage: $('#usage'),
+      exportBtn: $('#exportBtn'),
+      importFile: $('#importFile'),
+      wipeBtn: $('#wipeBtn'),
+      editHint: $('#editHint'),
+      formCard: $('#formCard')
+    };
+
+    // --- storage helpers
+    function load(){
+      try{ state.items = JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]'); }
+      catch{ state.items = []; }
+      render();
+    }
+    function save(){
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state.items));
+      updateUsage();
+    }
+
+    function bytesToHuman(b){
+      if(!b) return '0 KB';
+      const u=['B','KB','MB']; let i=0; while(b>1024 && i<u.length-1){b/=1024;i++} return b.toFixed(1)+' '+u[i];
+    }
+    function updateUsage(){
+      try{
+        const raw = localStorage.getItem(STORAGE_KEY) || '';
+        els.usage.textContent = bytesToHuman(new Blob([raw]).size);
+      }catch{ els.usage.textContent = '—'; }
+      els.counter.textContent = `${state.items.length} itens`;
+    }
+
+    // --- image tools
+    function fileToDataURL(file, maxW=1024){
+      return new Promise((resolve, reject)=>{
+        const reader = new FileReader();
+        reader.onerror = ()=>reject('Falha ao ler arquivo');
+        reader.onload = () => {
+          const img = new Image();
+          img.onload = () => {
+            const scale = Math.min(1, maxW / img.width);
+            const w = Math.max(1, Math.round(img.width * scale));
+            const h = Math.max(1, Math.round(img.height * scale));
+            const canvas = document.createElement('canvas');
+            canvas.width = w; canvas.height = h;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, w, h);
+            // qualidade 0.82 para equilíbrio tamanho/qualidade
+            const data = canvas.toDataURL('image/webp', 0.82);
+            resolve(data);
+          };
+          img.onerror = ()=>reject('Imagem inválida');
+          img.src = reader.result;
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+
+    // --- rendering
+    function cardNode(item){
+      const tpl = document.getElementById('cardTpl');
+      const node = tpl.content.firstElementChild.cloneNode(true);
+      node.querySelector('img').src = item.image || '';
+      node.querySelector('h3').textContent = item.name || 'Sem título';
+      node.querySelector('p').textContent = item.desc || '';
+      node.dataset.id = item.id;
+      return node;
+    }
+
+    function render(){
+      const term = els.search.value.trim().toLowerCase();
+      els.cards.innerHTML = '';
+      const list = state.items
+        .slice()
+        .sort((a,b)=>b.updatedAt-a.updatedAt)
+        .filter(it=> !term || (it.name+"\n"+it.desc).toLowerCase().includes(term));
+
+      for(const it of list){
+        const node = cardNode(it);
+        els.cards.appendChild(node);
+      }
+      updateUsage();
+    }
+
+    // --- CRUD
+    async function handleSave(){
+      const name = els.name.value.trim();
+      const desc = els.desc.value.trim();
+      if(!name){ alert('Dê um nome à entrada.'); return; }
+
+      // escolher imagem: arquivo (com compressão) tem prioridade; senão URL; senão mantém a anterior (em edição)
+      let image = '';
+      try{
+        if(els.imageFile.files[0]){
+          image = await fileToDataURL(els.imageFile.files[0]);
+        } else if(els.imageURL.value.trim()){
+          image = els.imageURL.value.trim();
+        }
+      }catch(e){ console.warn(e); alert('Falha ao processar imagem.'); return; }
+
+      if(state.editingId){
+        const idx = state.items.findIndex(i=>i.id===state.editingId);
+        if(idx>-1){
+          const prev = state.items[idx];
+          state.items[idx] = {
+            ...prev,
+            name, desc,
+            image: image || prev.image,
+            updatedAt: Date.now()
+          };
+        }
+      } else {
+        state.items.push({
+          id: crypto.randomUUID(),
+          name, desc, image,
+          createdAt: Date.now(), updatedAt: Date.now()
+        });
+      }
+
+      save();
+      resetForm();
+      render();
+    }
+
+    function resetForm(){
+      els.name.value = '';
+      els.desc.value = '';
+      els.imageFile.value = '';
+      els.imageURL.value = '';
+      els.fileName.textContent = '.jpg .png .webp';
+      state.editingId = null;
+      els.editHint.classList.add('hidden');
+      els.saveBtn.textContent = 'Salvar';
+      els.formCard.scrollIntoView({behavior:'smooth',block:'start'});
+    }
+
+    function onCardClick(e){
+      const act = e.target?.dataset?.act; if(!act) return;
+      const card = e.target.closest('.card');
+      const id = card?.dataset?.id; if(!id) return;
+      const item = state.items.find(i=>i.id===id);
+      if(!item) return;
+
+      if(act==='del'){
+        if(confirm('Excluir esta entrada?')){
+          state.items = state.items.filter(i=>i.id!==id);
+          save(); render();
+        }
+      }
+      if(act==='edit'){
+        state.editingId = id;
+        els.name.value = item.name;
+        els.desc.value = item.desc;
+        els.imageFile.value = '';
+        els.imageURL.value = '';
+        els.editHint.classList.remove('hidden');
+        els.saveBtn.textContent = 'Salvar Alterações';
+        els.formCard.scrollIntoView({behavior:'smooth',block:'start'});
+      }
+      if(act==='dup'){
+        const copy = {...item, id: crypto.randomUUID(), createdAt: Date.now(), updatedAt: Date.now()};
+        state.items.unshift(copy);
+        save(); render();
+      }
+    }
+
+    // --- export/import
+    function exportJSON(){
+      const data = JSON.stringify(state.items, null, 2);
+      const blob = new Blob([data], {type:'application/json'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = 'stlnbo-wiki-backup.json';
+      document.body.appendChild(a); a.click(); a.remove();
+      URL.revokeObjectURL(url);
+    }
+
+    function importJSON(file){
+      const reader = new FileReader();
+      reader.onload = () => {
+        try{
+          const arr = JSON.parse(reader.result);
+          if(!Array.isArray(arr)) throw new Error('Formato inválido');
+          // mesclar preservando ids únicos
+          const existing = new Map(state.items.map(i=>[i.id,i]));
+          for(const it of arr){
+            if(it && it.id && !existing.has(it.id)){
+              existing.set(it.id, it);
+            }
+          }
+          state.items = Array.from(existing.values());
+          save(); render();
+        }catch(e){ alert('Falha ao importar: '+e.message); }
+      };
+      reader.readAsText(file);
+    }
+
+    // --- wipe
+    function wipeAll(){
+      if(confirm('Isto apagará TODAS as entradas salvas neste navegador. Continuar?')){
+        state.items = []; save(); render();
+      }
+    }
+
+    // --- events
+    els.imageFile.addEventListener('change', ()=>{
+      els.fileName.textContent = els.imageFile.files[0]?.name || '.jpg .png .webp';
+    });
+    els.saveBtn.addEventListener('click', handleSave);
+    els.resetBtn.addEventListener('click', resetForm);
+    els.cards.addEventListener('click', onCardClick);
+    els.search.addEventListener('input', render);
+    els.exportBtn.addEventListener('click', exportJSON);
+    els.importFile.addEventListener('change', e=>{
+      if(e.target.files[0]) importJSON(e.target.files[0]);
+      e.target.value = '';
+    });
+    els.wipeBtn.addEventListener('click', wipeAll);
+
+    // atalhos
+    window.addEventListener('keydown', (e)=>{
+      if((e.ctrlKey || e.metaKey) && e.key.toLowerCase()==='k'){
+        e.preventDefault(); els.search.focus(); els.search.select();
+      }
+    });
+
+    // boot
+    load();
+  </script>
+</body>
+</html>
