@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>STLNBO Wiki</title>
+</head>
+<body>
+<h1>Wiki STLNBO</h1>
+<div id="wiki"></div>
+
+<script>
+// URL do seu arquivo JSON no GitHub (raw)
+const githubJsonUrl = "https://raw.githubusercontent.com/PurpleMurasaki38/stlnbo-wiki/main/stlnbo.json";
+
+async function loadJSON() {
+    try {
+        const response = await fetch(githubJsonUrl);
+        if (!response.ok) throw new Error("Erro ao baixar JSON");
+
+        const data = await response.json();
+        const wikiDiv = document.getElementById('wiki');
+
+        // Exemplo simples: mostrar cada personagem do JSON
+        data.personagens.forEach(p => {
+            const card = document.createElement('div');
+            card.style.border = "1px solid black";
+            card.style.margin = "5px";
+            card.style.padding = "5px";
+            card.innerHTML = `
+                <h3>${p.nome}</h3>
+                <img src="${p.imagem}" width="100" />
+                <p>${p.descricao}</p>
+            `;
+            wikiDiv.appendChild(card);
+        });
+
+    } catch (err) {
+        console.error(err);
+        alert("Não foi possível carregar o JSON");
+    }
+}
+
+loadJSON();
+</script>
+</body>
+</html>
