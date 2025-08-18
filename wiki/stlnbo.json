@@ -10,7 +10,6 @@
 <div id="wiki"></div>
 
 <script>
-// URL do seu arquivo JSON no GitHub (raw)
 const githubJsonUrl = "https://raw.githubusercontent.com/PurpleMurasaki38/stlnbo-wiki/main/stlnbo.json";
 
 async function loadJSON() {
@@ -45,3 +44,4 @@ loadJSON();
 </script>
 </body>
 </html>
+
